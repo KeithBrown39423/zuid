@@ -4,9 +4,9 @@ const rand = std.crypto.random;
 
 /// Pre-defined UUID Namespaces from RFC-4122.
 pub const UuidNamespace = struct {
-    pub const DNS  = deserialize("6ba7b810-9dad-11d1-80b4-00c04fd430c8") catch unreachable;
-    pub const URL  = deserialize("6ba7b811-9dad-11d1-80b4-00c04fd430c8") catch unreachable;
-    pub const OID  = deserialize("6ba7b812-9dad-11d1-80b4-00c04fd430c8") catch unreachable;
+    pub const DNS = deserialize("6ba7b810-9dad-11d1-80b4-00c04fd430c8") catch unreachable;
+    pub const URL = deserialize("6ba7b811-9dad-11d1-80b4-00c04fd430c8") catch unreachable;
+    pub const OID = deserialize("6ba7b812-9dad-11d1-80b4-00c04fd430c8") catch unreachable;
     pub const X500 = deserialize("6ba7b814-9dad-11d1-80b4-00c04fd430c8") catch unreachable;
 };
 
@@ -88,14 +88,7 @@ pub const UUID = struct {
 pub fn deserialize(urn: []const u8) !UUID {
     @setEvalBranchQuota(4096);
 
-    if (
-        urn.len != 36
-        or std.mem.count(u8, urn, "-") != 4
-        or urn[8] != '-'
-        or urn[13] != '-'
-        or urn[18] != '-'
-        or urn[23] != '-'
-    ) {
+    if (urn.len != 36 or std.mem.count(u8, urn, "-") != 4 or urn[8] != '-' or urn[13] != '-' or urn[18] != '-' or urn[23] != '-') {
         return error.InvalidUuid;
     }
 
@@ -162,23 +155,16 @@ pub const new = struct {
         };
     }
 
-    pub fn v3(allocator: std.mem.Allocator, uuid_namespace: UUID, name: []const u8) !UUID {
+    pub fn v3(uuid_namespace: UUID, name: []const u8) !UUID {
         var digest: [std.crypto.hash.Md5.digest_length]u8 = undefined;
         const namespace_str = try uuid_namespace.toArray();
 
-        const data = try allocator.alloc(u8, 16 + name.len);
+        var hasher = std.crypto.hash.Md5.init(.{});
 
-        for (0..16) |i| {
-            data[i] = namespace_str[i];
-        }
+        hasher.update(&namespace_str);
+        hasher.update(name);
 
-        for (0..name.len) |i| {
-            data[i + 16] = name[i];
-        }
-
-        std.crypto.hash.Md5.hash(data, &digest, .{});
-
-        allocator.free(data);
+        hasher.final(&digest);
 
         const time_low = std.mem.nativeToBig(u32, std.mem.bytesToValue(u32, digest[0..4]));
         const time_mid = std.mem.nativeToBig(u16, std.mem.bytesToValue(u16, digest[4..6]));
