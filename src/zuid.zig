@@ -30,14 +30,14 @@ pub const UUID = struct {
 
     pub fn toString(self: *const UUID) ![36]u8 {
         var buffer: [36]u8 = undefined;
-        _ = try std.fmt.bufPrint(&buffer, "{x:0>8}-{x:0>4}-{x:0>4}-{x:0>2}{x:0>2}-{x:0>12}", .{
+        _ = std.fmt.bufPrint(&buffer, "{x:0>8}-{x:0>4}-{x:0>4}-{x:0>2}{x:0>2}-{x:0>12}", .{
             self.time_low,
             self.time_mid,
             self.time_hi_and_version,
             self.clock_seq_hi_and_reserved,
             self.clock_seq_low,
             self.node,
-        });
+        }) catch unreachable;
 
         return buffer;
     }
@@ -56,7 +56,7 @@ pub const UUID = struct {
     pub fn toArray(self: *const UUID) ![16]u8 {
         var byte_array: [16]u8 = undefined;
 
-        const str = try self.toString();
+        const str = self.toString();
 
         var byte: u8 = 0;
         var high_nibble: bool = true;
@@ -157,7 +157,7 @@ pub const new = struct {
 
     pub fn v3(uuid_namespace: UUID, name: []const u8) !UUID {
         var digest: [std.crypto.hash.Md5.digest_length]u8 = undefined;
-        const namespace_str = try uuid_namespace.toArray();
+        const namespace_str = uuid_namespace.toArray();
 
         var hasher = std.crypto.hash.Md5.init(.{});
 
@@ -217,7 +217,7 @@ pub const new = struct {
 
     pub fn v5(uuid_namespace: UUID, name: []const u8) !UUID {
         var digest: [std.crypto.hash.Sha1.digest_length]u8 = undefined;
-        const namespace_str = try uuid_namespace.toArray();
+        const namespace_str = uuid_namespace.toArray();
 
         var hasher = std.crypto.hash.Sha1.init(.{});
 

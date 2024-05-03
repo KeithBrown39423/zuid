@@ -7,7 +7,7 @@ test "UUID v1" {
     const uuid = zuid.new.v1();
     const version = (uuid.time_hi_and_version & 0xF000) >> 12;
     const variant = (uuid.clock_seq_hi_and_reserved & 0xC0) >> 6;
-    const urn = try uuid.toString();
+    const urn = uuid.toString();
     try expect(urn.len == 36);
     try expect(urn[14] == '1' and version == 1);
     try expect(std.mem.count(u8, &urn, "-") == 4);
@@ -21,8 +21,8 @@ test "UUID v3" {
     const namespace = zuid.UuidNamespace.URL;
     const url = "https://example.com";
 
-    const uuid = try zuid.new.v3(namespace, url);
-    const urn = try uuid.toString();
+    const uuid = zuid.new.v3(namespace, url);
+    const urn = uuid.toString();
     const version = (uuid.time_hi_and_version & 0xF000) >> 12;
     const variant = (uuid.clock_seq_hi_and_reserved & 0xC0) >> 6;
     try expect(std.mem.eql(u8, str, &urn));
@@ -37,7 +37,7 @@ test "UUID v4" {
     const uuid = zuid.new.v4();
     const version = (uuid.time_hi_and_version & 0xF000) >> 12;
     const variant = (uuid.clock_seq_hi_and_reserved & 0xC0) >> 6;
-    const urn = try uuid.toString();
+    const urn = uuid.toString();
     try expect(urn.len == 36);
     try expect(urn[14] == '4' and version == 4);
     try expect(std.mem.count(u8, &urn, "-") == 4);
@@ -51,8 +51,8 @@ test "UUID v5" {
     const namespace = zuid.UuidNamespace.URL;
     const url = "https://example.com";
 
-    const uuid = try zuid.new.v5(namespace, url);
-    const urn = try uuid.toString();
+    const uuid = zuid.new.v5(namespace, url);
+    const urn = uuid.toString();
     const version = (uuid.time_hi_and_version & 0xF000) >> 12;
     const variant = (uuid.clock_seq_hi_and_reserved & 0xC0) >> 6;
     try expect(std.mem.eql(u8, str, &urn));

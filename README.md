@@ -42,23 +42,13 @@ pub fn main() !void {
     std.debug.print("UUID: {}\n", .{try uuid.toString()});
 }
 ```
-If you are creating a v3 or v5 UUID, make sure to create an allocator.
+If you are creating a v3 or v5 UUID, make sure to include the namespace and data.
 ```zig
 const std = @import("std");
 const zuid = @import("zuid");
 
 pub fn main() !void {
-    const gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer {
-        const deinitStatus = gpa.deinit();
-        if (deinitStatus != .Ok) {
-            std.debug.print("Failed to deinitialize allocator: {}\n", .{deinitStatus});
-            std.process.exit(1);
-        }
-    }
-    const allocator = gpa.allocator();
-    const uuid = try zuid.new.v5(allocator, zuid.UuidNamespace, "https://example.com");
-    // zuid will free any used memory
+    const uuid = zuid.new.v5(zuid.UuidNamespace, "https://example.com");
 
     std.debug.print("UUID: {}\n", .{try uuid.toString()});
 }
