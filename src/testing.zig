@@ -51,10 +51,7 @@ test "UUID v5" {
     const namespace = zuid.UuidNamespace.URL;
     const url = "https://example.com";
 
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = gpa.allocator();
-
-    const uuid = try zuid.new.v5(allocator, namespace, url);
+    const uuid = try zuid.new.v5(namespace, url);
     const urn = try uuid.toString();
     const version = (uuid.time_hi_and_version & 0xF000) >> 12;
     const variant = (uuid.clock_seq_hi_and_reserved & 0xC0) >> 6;

@@ -215,23 +215,16 @@ pub const new = struct {
         };
     }
 
-    pub fn v5(allocator: std.mem.Allocator, uuid_namespace: UUID, name: []const u8) !UUID {
+    pub fn v5(uuid_namespace: UUID, name: []const u8) !UUID {
         var digest: [std.crypto.hash.Sha1.digest_length]u8 = undefined;
         const namespace_str = try uuid_namespace.toArray();
 
-        const data = try allocator.alloc(u8, 16 + name.len);
+        var hasher = std.crypto.hash.Sha1.init(.{});
 
-        for (0..16) |i| {
-            data[i] = namespace_str[i];
-        }
+        hasher.update(&namespace_str);
+        hasher.update(name);
 
-        for (0..name.len) |i| {
-            data[i + 16] = name[i];
-        }
-
-        std.crypto.hash.Sha1.hash(data, &digest, .{});
-
-        allocator.free(data);
+        hasher.final(&digest);
 
         const time_low = std.mem.nativeToBig(u32, std.mem.bytesToValue(u32, digest[0..4]));
         const time_mid = std.mem.nativeToBig(u16, std.mem.bytesToValue(u16, digest[4..6]));
