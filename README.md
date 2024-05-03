@@ -1,5 +1,5 @@
 <h1 align="center">ZUID</h1>
-<h3 align="center">The best UUID library for ZIG </h3>
+<h3 align="center">The best UUID library for ZIG</h3>
 
 <p align="center">
   <a href="#features">Features</a> •
@@ -49,6 +49,13 @@ const zuid = @import("zuid");
 
 pub fn main() !void {
     const gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer {
+        const deinitStatus = gpa.deinit();
+        if (deinitStatus != .Ok) {
+            std.debug.print("Failed to deinitialize allocator: {}\n", .{deinitStatus});
+            std.process.exit(1);
+        }
+    }
     const allocator = gpa.allocator();
     const uuid = try zuid.new.v5(allocator, zuid.UuidNamespace, "https://example.com");
     // zuid will free any used memory
