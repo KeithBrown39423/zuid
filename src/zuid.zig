@@ -53,14 +53,14 @@ pub const UUID = struct {
         return time_low | time_mid | time_hi_and_version | clock_seq_hi_and_reserved | clock_seq_low | node;
     }
 
-    pub fn toArray(self: *const UUID) ![16]u8 {
+    pub fn toArray(self: *const UUID) [16]u8 {
         var byte_array: [16]u8 = undefined;
 
         const str = self.toString();
 
         var byte: u8 = 0;
         var high_nibble: bool = true;
-        var byte_indexx: usize = 0;
+        var byte_index: usize = 0;
 
         for (str) |char| {
             if (char == '-') {
@@ -73,8 +73,8 @@ pub const UUID = struct {
                 byte <<= 4;
                 high_nibble = false;
             } else {
-                byte_array[byte_indexx] = byte;
-                byte_indexx += 1;
+                byte_array[byte_index] = byte;
+                byte_index += 1;
                 byte = 0;
                 high_nibble = true;
             }
