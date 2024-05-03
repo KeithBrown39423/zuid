@@ -28,7 +28,7 @@ pub const UUID = struct {
     clock_seq_low: u8,
     node: u48,
 
-    pub fn toString(self: *const UUID) ![36]u8 {
+    pub fn toString(self: *const UUID) [36]u8 {
         var buffer: [36]u8 = undefined;
         _ = std.fmt.bufPrint(&buffer, "{x:0>8}-{x:0>4}-{x:0>4}-{x:0>2}{x:0>2}-{x:0>12}", .{
             self.time_low,
