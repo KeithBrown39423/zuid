@@ -20,13 +20,13 @@ fn hexCharToInt(c: u8) u8 {
     }
 }
 
-pub const UUID = struct {
-    time_low: u32,
-    time_mid: u16,
-    time_hi_and_version: u16,
-    clock_seq_hi_and_reserved: u8,
-    clock_seq_low: u8,
+pub const UUID = packed struct {
     node: u48,
+    clock_seq_low: u8,
+    clock_seq_hi_and_reserved: u8,
+    time_hi_and_version: u16,
+    time_mid: u16,
+    time_low: u32,
 
     pub fn toString(self: *const UUID) [36]u8 {
         var buffer: [36]u8 = undefined;
@@ -40,17 +40,6 @@ pub const UUID = struct {
         }) catch unreachable;
 
         return buffer;
-    }
-
-    pub fn toInt(self: *const UUID) u128 {
-        const time_low = @as(u128, @intCast(self.time_low)) << 96;
-        const time_mid = @as(u128, @intCast(self.time_mid)) << 80;
-        const time_hi_and_version = @as(u128, @intCast(self.time_hi_and_version)) << 64;
-        const clock_seq_hi_and_reserved = @as(u128, @intCast(self.clock_seq_hi_and_reserved)) << 56;
-        const clock_seq_low = @as(u128, @intCast(self.clock_seq_low)) << 48;
-        const node = @as(u128, @intCast(self.node));
-
-        return time_low | time_mid | time_hi_and_version | clock_seq_hi_and_reserved | clock_seq_low | node;
     }
 
     pub fn toArray(self: *const UUID) [16]u8 {
@@ -119,8 +108,9 @@ fn getTime() u60 {
     return @as(u60, @intCast(i_60_value));
 }
 
-/// Create a new UUID
+/// Generate a new UUID
 pub const new = struct {
+    /// Generate a time-based UUID
     pub fn v1() UUID {
         const timestamp = getTime();
 
@@ -155,6 +145,7 @@ pub const new = struct {
         };
     }
 
+    /// Generate a UUID from a namespace and a name using the MD5 hash function
     pub fn v3(uuid_namespace: UUID, name: []const u8) UUID {
         var digest: [std.crypto.hash.Md5.digest_length]u8 = undefined;
         const namespace_str = uuid_namespace.toArray();
@@ -166,19 +157,19 @@ pub const new = struct {
 
         hasher.final(&digest);
 
-        const time_low = std.mem.nativeToBig(u32, std.mem.bytesToValue(u32, digest[0..4]));
-        const time_mid = std.mem.nativeToBig(u16, std.mem.bytesToValue(u16, digest[4..6]));
+        const time_low = std.mem.readInt(u32, digest[0..4], .big);
+        const time_mid = std.mem.readInt(u16, digest[4..6], .big);
 
-        var time_hi_and_version = std.mem.nativeToBig(u16, std.mem.bytesToValue(u16, digest[6..8]));
+        var time_hi_and_version = std.mem.readInt(u16, digest[6..8], .big);
         time_hi_and_version &= 0x0FFF;
         time_hi_and_version |= 0x3000;
 
-        var clock_seq_hi_and_reserved = std.mem.nativeToBig(u8, digest[8]);
+        var clock_seq_hi_and_reserved = std.mem.readInt(u8, digest[8..9], .big);
         clock_seq_hi_and_reserved &= 0x3F;
         clock_seq_hi_and_reserved |= 0x80;
 
-        const clock_seq_low = std.mem.nativeToBig(u8, digest[9]);
-        const node = std.mem.nativeToBig(u48, std.mem.bytesToValue(u48, digest[10..16]));
+        const clock_seq_low = std.mem.readInt(u8, digest[9..10], .big);
+        const node = std.mem.readInt(u48, digest[10..16], .big);
 
         return UUID{
             .time_low = time_low,
@@ -190,6 +181,7 @@ pub const new = struct {
         };
     }
 
+    /// Generate a completely random UUID
     pub fn v4() UUID {
         const time_low = rand.int(u32);
         const time_mid = rand.int(u16);
@@ -215,6 +207,7 @@ pub const new = struct {
         };
     }
 
+    /// Generate a UUID from a namespace and a name using the SHA-1 hash function
     pub fn v5(uuid_namespace: UUID, name: []const u8) UUID {
         var digest: [std.crypto.hash.Sha1.digest_length]u8 = undefined;
         const namespace_str = uuid_namespace.toArray();
@@ -226,19 +219,19 @@ pub const new = struct {
 
         hasher.final(&digest);
 
-        const time_low = std.mem.nativeToBig(u32, std.mem.bytesToValue(u32, digest[0..4]));
-        const time_mid = std.mem.nativeToBig(u16, std.mem.bytesToValue(u16, digest[4..6]));
+        const time_low = std.mem.readInt(u32, digest[0..4], .big);
+        const time_mid = std.mem.readInt(u16, digest[4..6], .big);
 
-        var time_hi_and_version = std.mem.nativeToBig(u16, std.mem.bytesToValue(u16, digest[6..8]));
+        var time_hi_and_version = std.mem.readInt(u16, digest[6..8], .big);
         time_hi_and_version &= 0x0FFF;
         time_hi_and_version |= 0x5000;
 
-        var clock_seq_hi_and_reserved = std.mem.nativeToBig(u8, digest[8]);
+        var clock_seq_hi_and_reserved = std.mem.readInt(u8, digest[8..9], .big);
         clock_seq_hi_and_reserved &= 0x3F;
         clock_seq_hi_and_reserved |= 0x80;
 
-        const clock_seq_low = std.mem.nativeToBig(u8, digest[9]);
-        const node = std.mem.nativeToBig(u48, std.mem.bytesToValue(u48, digest[10..16]));
+        const clock_seq_low = std.mem.readInt(u8, digest[9..10], .big);
+        const node = std.mem.readInt(u48, digest[10..16], .big);
 
         return UUID{
             .time_low = time_low,
