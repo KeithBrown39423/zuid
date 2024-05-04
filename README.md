@@ -48,7 +48,7 @@ const std = @import("std");
 const zuid = @import("zuid");
 
 pub fn main() !void {
-    const uuid = zuid.new.v5(zuid.UuidNamespace, "https://example.com");
+    const uuid = zuid.new.v5(zuid.UuidNamespace.URL, "https://example.com");
 
     std.debug.print("UUID: {}\n", .{try uuid.toString()});
 }
