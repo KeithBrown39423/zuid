@@ -53,7 +53,7 @@ pub fn main() !void {
     std.debug.print("UUID: {}\n", .{uuid.toString()});
 }
 ```
-You can also get the UUID has an int through `@bitCast`.
+You can also get the UUID as an int through `@bitCast`.
 ```zig
 const std = @import("std");
 const zuid = @import("zuid");
