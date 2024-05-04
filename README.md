@@ -39,7 +39,7 @@ const zuid = @import("zuid");
 pub fn main() !void {
     const uuid = zuid.new.v4();
 
-    std.debug.print("UUID: {}\n", .{try uuid.toString()});
+    std.debug.print("UUID: {}\n", .{uuid.toString()});
 }
 ```
 If you are creating a v3 or v5 UUID, make sure to include the namespace and data.
@@ -50,7 +50,19 @@ const zuid = @import("zuid");
 pub fn main() !void {
     const uuid = zuid.new.v5(zuid.UuidNamespace.URL, "https://example.com");
 
-    std.debug.print("UUID: {}\n", .{try uuid.toString()});
+    std.debug.print("UUID: {}\n", .{uuid.toString()});
+}
+```
+You can also get the UUID has an int through `@bitCast`.
+```zig
+const std = @import("std");
+const zuid = @import("zuid");
+
+pub fn main() !void {
+    const uuid = zuid.new.v4();
+    std.debug.print("UUID: {s}\n", .{uuid.toString()});
+    const uuid_int = @as(u128, @bitCast(uuid));
+    std.debug.print("UUID as int: {d}\n", .{uuid_int});
 }
 ```
 
