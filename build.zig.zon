@@ -1,5 +1,5 @@
 .{
     .name = "zuid",
     .version = "1.1.0",
-    .paths = .{},
+    .paths = .{""},
 }
