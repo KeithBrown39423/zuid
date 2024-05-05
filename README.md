@@ -29,6 +29,15 @@ pub fn build(b: *std.Build) void {
     // ...
 }
 ```
+Also make sure to add the following to your `build.zig.zon` file:
+```json
+.dependencies = .{
+    .zuid = .{
+        .url = "https://github.com/KeithBrown39423/zuid/archive/refs/tags/v1.1.1.tar.gz",
+            .hash = "12201b9ead072aa5ce87a1486637a41d7711f35955d37ec2dda358f17fe9c4690752",
+    },
+},
+```
 
 ## Examples
 Here is a simple example of how to generate a UUID:
