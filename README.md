@@ -1,3 +1,11 @@
+<div align="center">
+  <br /><br />
+  <img src="./zuid-dynamic.svg" alt="Banner" />
+  <br /><br />
+</div>
+
+----
+
 <h1 align="center">ZUID</h1>
 <h3 align="center">A simple UUID library for ZIG</h3>
 
