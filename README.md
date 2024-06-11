@@ -30,7 +30,7 @@ pub fn build(b: *std.Build) void {
 }
 ```
 Also make sure to add the following to your `build.zig.zon` file:
-```json
+```zig
 .dependencies = .{
     .zuid = .{
         .url = "https://github.com/KeithBrown39423/zuid/archive/refs/tags/v1.1.1.tar.gz",
