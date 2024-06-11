@@ -39,13 +39,8 @@ pub fn build(b: *std.Build) void {
 }
 ```
 Also make sure to add the following to your `build.zig.zon` file:
-```zig
-.dependencies = .{
-    .zuid = .{
-        .url = "https://github.com/KeithBrown39423/zuid/archive/refs/tags/v2.0.0.tar.gz",
-        .hash = "12208b4e9fcb6da91aa1fc2ac4fb8d963b25fb7e6651cbf017a17397b5fba6dcaaf3",
-    },
-},
+```sh
+zig fetch --save https://github.com/KeithBrown39423/zuid/archive/refs/tags/v2.0.0.tar.gz
 ```
 
 ## Examples
