@@ -45,31 +45,7 @@ pub const UUID = packed struct {
 
     pub fn toArray(self: *const UUID) [16]u8 {
         var byte_array: [16]u8 = undefined;
-
-        const str = self.toString();
-
-        var byte: u8 = 0;
-        var high_nibble: bool = true;
-        var byte_index: usize = 0;
-
-        for (str) |char| {
-            if (char == '-') {
-                continue;
-            }
-
-            byte |= hexCharToInt(char);
-
-            if (high_nibble) {
-                byte <<= 4;
-                high_nibble = false;
-            } else {
-                byte_array[byte_index] = byte;
-                byte_index += 1;
-                byte = 0;
-                high_nibble = true;
-            }
-        }
-
+        std.mem.writeInt(u128, &byte_array, @bitCast(self), .big);
         return byte_array;
     }
 };
@@ -103,14 +79,7 @@ pub fn deserialize(urn: []const u8) !UUID {
 }
 
 pub fn fromArray(array: [16]u8) UUID {
-    return UUID{
-        .set_1 = std.mem.readInt(u32, array[0..4], .big),
-        .set_2 = std.mem.readInt(u16, array[4..6], .big),
-        .time_hi_and_version = std.mem.readInt(u16, array[6..8], .big),
-        .clock_seq_hi_and_reserved = std.mem.readInt(u8, array[8..9], .big),
-        .set_4 = std.mem.readInt(u8, array[9..10], .big),
-        .set_5 = std.mem.readInt(u48, array[10..16], .big),
-    };
+    return @bitCast(std.mem.readInt(u128, &array, .big));
 }
 
 /// Get the time since the Gregorian epoch as 100-nanosecond units.
