@@ -20,10 +20,11 @@ This library provides a simple and efficient way to generate and manipulate UUID
 
 
 ## Features
-- Generate UUIDs of all versions (1, 3, 4, 5)
+- Generate UUIDs of most versions (1, 3, 4, 5, 6, 7, and 8)
 - Parse UUIDs from strings
+- Create UUIDs from binary arrays
 - Convert UUIDs to strings, 128-bit integers, and byte-arrays
-- Access to parts of UUID (`time_low`, `time_mid`, `node`, etc.)
+- Access to parts of UUID (`set_1`, `version`, `variant`, etc.)
 
 # Installation
 To install this library, add the following to your `build.zig` file:
@@ -41,8 +42,8 @@ Also make sure to add the following to your `build.zig.zon` file:
 ```zig
 .dependencies = .{
     .zuid = .{
-        .url = "https://github.com/KeithBrown39423/zuid/archive/refs/tags/v1.1.1.tar.gz",
-        .hash = "12201b9ead072aa5ce87a1486637a41d7711f35955d37ec2dda358f17fe9c4690752",
+        .url = "https://github.com/KeithBrown39423/zuid/archive/refs/tags/v2.0.0.tar.gz",
+        .hash = "12208b4e9fcb6da91aa1fc2ac4fb8d963b25fb7e6651cbf017a17397b5fba6dcaaf3",
     },
 },
 ```
