@@ -45,7 +45,7 @@ pub const UUID = packed struct {
 
     pub fn toArray(self: *const UUID) [16]u8 {
         var byte_array: [16]u8 = undefined;
-        std.mem.writeInt(u128, &byte_array, @bitCast(self), .big);
+        std.mem.writeInt(u128, &byte_array, @bitCast(self.*), .big);
         return byte_array;
     }
 };
