@@ -42,7 +42,7 @@ Also make sure to add the following to your `build.zig.zon` file:
 .dependencies = .{
     .zuid = .{
         .url = "https://github.com/KeithBrown39423/zuid/archive/refs/tags/v1.1.1.tar.gz",
-            .hash = "12201b9ead072aa5ce87a1486637a41d7711f35955d37ec2dda358f17fe9c4690752",
+        .hash = "12201b9ead072aa5ce87a1486637a41d7711f35955d37ec2dda358f17fe9c4690752",
     },
 },
 ```
