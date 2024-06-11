@@ -8,7 +8,7 @@ pub fn build(b: *std.Build) void {
         .root_source_file = b.path("src/zuid.zig"),
     });
 
-    const test_step = b.step("test", "Run tests for v1, v3, v4, and v5 UUIDs.");
+    const test_step = b.step("test", "Run tests for v1, v3, v4, v5, v6, v7, and v8 UUIDs.");
     const tests = b.addTest(.{
         .root_source_file = b.path("src/testing.zig"),
         .target = target,
