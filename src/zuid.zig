@@ -30,17 +30,47 @@ pub const UUID = packed struct {
     set_2: u16,
     set_1: u32,
 
-    pub fn toString(self: *const UUID) [36]u8 {
-        var buffer: [36]u8 = undefined;
-        _ = std.fmt.bufPrint(&buffer, "{x:0>8}-{x:0>4}-{x:0>4}-{x:0>4}-{x:0>12}", .{
-            self.set_1,
-            self.set_2,
-            (self.set_3 & 0x0FFF) | (@as(u16, @intCast(self.version)) << 12),
-            (self.set_4 & 0x3FFF) | (@as(u16, @intCast(self.variant)) << 14),
-            self.set_5,
-        }) catch unreachable;
-
-        return buffer;
+    pub fn format(self: *const UUID, comptime fmt: []const u8, options: std.fmt.FormatOptions, writer: anytype) !void {
+        _ = options;
+        if (std.mem.eql(u8, fmt, "s")) {
+            try std.fmt.format(writer, "{x:0>8}-{x:0>4}-{x:0>4}-{x:0>4}-{x:0>12}", .{
+                self.set_1,
+                self.set_2,
+                (self.set_3 & 0x0FFF) | (@as(u16, @intCast(self.version)) << 12),
+                (self.set_4 & 0x3FFF) | (@as(u16, @intCast(self.variant)) << 14),
+                self.set_5,
+            });
+        } else if (std.mem.eql(u8, fmt, "x")) {
+            try std.fmt.format(writer, "{x:0>8}{x:0>4}{x:0>4}{x:0>4}{x:0>12}", .{
+                self.set_1,
+                self.set_2,
+                (self.set_3 & 0x0FFF) | (@as(u16, @intCast(self.version)) << 12),
+                (self.set_4 & 0x3FFF) | (@as(u16, @intCast(self.variant)) << 14),
+                self.set_5,
+            });
+        } else if (std.mem.eql(u8, fmt, "S")) {
+            try std.fmt.format(writer, "{X:0>8}-{X:0>4}-{X:0>4}-{X:0>4}-{X:0>12}", .{
+                self.set_1,
+                self.set_2,
+                (self.set_3 & 0x0FFF) | (@as(u16, @intCast(self.version)) << 12),
+                (self.set_4 & 0x3FFF) | (@as(u16, @intCast(self.variant)) << 14),
+                self.set_5,
+            });
+        } else if (std.mem.eql(u8, fmt, "X")) {
+            try std.fmt.format(writer, "{X:0>8}{X:0>4}{X:0>4}{X:0>4}{X:0>12}", .{
+                self.set_1,
+                self.set_2,
+                (self.set_3 & 0x0FFF) | (@as(u16, @intCast(self.version)) << 12),
+                (self.set_4 & 0x3FFF) | (@as(u16, @intCast(self.variant)) << 14),
+                self.set_5,
+            });
+        } else if (std.mem.eql(u8, fmt, "d")) {
+            try std.fmt.format(writer, "{d}", .{@as(u128, @bitCast(self.*))});
+        } else {
+            var buffer: [16]u8 = undefined;
+            std.mem.writeInt(u128, &buffer, @as(u128, @bitCast(self.*)), .big);
+            try std.fmt.format(writer, "{any}", .{&buffer});            
+        }
     }
 
     pub fn toArray(self: *const UUID) [16]u8 {

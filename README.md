@@ -39,7 +39,7 @@ pub fn build(b: *std.Build) void {
 }
 ```
 Also make sure to add the following to your `build.zig.zon` file:
-```sh
+```bash
 zig fetch --save https://github.com/KeithBrown39423/zuid/archive/refs/tags/v2.0.0.tar.gz
 ```
 
@@ -52,7 +52,7 @@ const zuid = @import("zuid");
 pub fn main() !void {
     const uuid = zuid.new.v4();
 
-    std.debug.print("UUID: {}\n", .{uuid.toString()});
+    std.debug.print("UUID: {s}\n", .{ uuid });
 }
 ```
 If you are creating a v3 or v5 UUID, make sure to include the namespace and data.
@@ -63,7 +63,7 @@ const zuid = @import("zuid");
 pub fn main() !void {
     const uuid = zuid.new.v5(zuid.UuidNamespace.URL, "https://example.com");
 
-    std.debug.print("UUID: {}\n", .{uuid.toString()});
+    std.debug.print("UUID: {s}\n", .{ uuid });
 }
 ```
 You can also get the UUID as an int through `@bitCast`.
@@ -73,9 +73,14 @@ const zuid = @import("zuid");
 
 pub fn main() !void {
     const uuid = zuid.new.v4();
-    std.debug.print("UUID: {s}\n", .{uuid.toString()});
+
+    std.debug.print("UUID: {s}\n", .{ uuid });
     const uuid_int = @as(u128, @bitCast(uuid));
-    std.debug.print("UUID as int: {d}\n", .{uuid_int});
+    std.debug.print("UUID as int: {d}\n", .{ uuid_int });
+
+    // or
+
+    std.debug.print("UUID: {d}\n", .{ uuid });
 }
 ```
 
