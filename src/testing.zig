@@ -7,7 +7,9 @@ test "UUID v1" {
     const uuid = zuid.new.v1();
     const version = uuid.version;
     const variant = uuid.variant;
-    const urn = uuid.toString();
+    const urn: [36]u8 = undefined;
+    _ = try std.fmt.bufPrint(urn, "{s}", .{uuid});
+
     try expect(urn.len == 36);
     try expect(urn[14] == '1' and version == 1);
     try expect(std.mem.count(u8, &urn, "-") == 4);
@@ -22,9 +24,10 @@ test "UUID v3" {
     const url = "https://example.com";
 
     const uuid = zuid.new.v3(namespace, url);
-    const urn = uuid.toString();
     const version = uuid.version;
     const variant = uuid.variant;
+    const urn: [36]u8 = undefined;
+    _ = try std.fmt.bufPrint(urn, "{s}", .{uuid});
 
     try expect(std.mem.eql(u8, str, &urn));
     try expect(urn.len == 36);
@@ -38,7 +41,9 @@ test "UUID v4" {
     const uuid = zuid.new.v4();
     const version = uuid.version;
     const variant = uuid.variant;
-    const urn = uuid.toString();
+    const urn: [36]u8 = undefined;
+    _ = try std.fmt.bufPrint(urn, "{s}", .{uuid});
+
     try expect(urn.len == 36);
     try expect(urn[14] == '4' and version == 4);
     try expect(std.mem.count(u8, &urn, "-") == 4);
@@ -53,10 +58,11 @@ test "UUID v5" {
     const url = "https://example.com";
 
     const uuid = zuid.new.v5(namespace, url);
-    const urn = uuid.toString();
-
     const version = uuid.version;
     const variant = uuid.variant;
+    const urn: [36]u8 = undefined;
+    _ = try std.fmt.bufPrint(urn, "{s}", .{uuid});
+
     try expect(std.mem.eql(u8, str, &urn));
     try expect(urn.len == 36);
     try expect(std.mem.count(u8, &urn, "-") == 4);
@@ -69,7 +75,9 @@ test "UUID v6" {
     const uuid = zuid.new.v6();
     const version = uuid.version;
     const variant = uuid.variant;
-    const urn = uuid.toString();
+    const urn: [36]u8 = undefined;
+    _ = try std.fmt.bufPrint(urn, "{s}", .{uuid});
+
     try expect(urn.len == 36);
     try expect(urn[14] == '6' and version == 6);
     try expect(std.mem.count(u8, &urn, "-") == 4);
@@ -81,7 +89,9 @@ test "UUID v7" {
     const uuid = zuid.new.v7();
     const version = uuid.version;
     const variant = uuid.variant;
-    const urn = uuid.toString();
+    const urn: [36]u8 = undefined;
+    _ = try std.fmt.bufPrint(urn, "{s}", .{uuid});
+
     try expect(urn.len == 36);
     try expect(urn[14] == '7' and version == 7);
     try expect(std.mem.count(u8, &urn, "-") == 4);
@@ -93,10 +103,13 @@ test "UUID v8" {
     const custom_a = std.crypto.random.int(u48);
     const custom_b = std.crypto.random.int(u12);
     const custom_c = std.crypto.random.int(u62);
+
     const uuid = zuid.new.v8(custom_a, custom_b, custom_c);
     const version = uuid.version;
     const variant = uuid.variant;
-    const urn = uuid.toString();
+    const urn: [36]u8 = undefined;
+    _ = try std.fmt.bufPrint(urn, "{s}", .{uuid});
+
     try expect(urn.len == 36);
     try expect(urn[14] == '8' and version == 8);
     try expect(std.mem.count(u8, &urn, "-") == 4);

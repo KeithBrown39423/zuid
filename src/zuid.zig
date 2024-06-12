@@ -69,7 +69,7 @@ pub const UUID = packed struct {
         } else {
             var buffer: [16]u8 = undefined;
             std.mem.writeInt(u128, &buffer, @as(u128, @bitCast(self.*)), .big);
-            try std.fmt.format(writer, "{any}", .{&buffer});            
+            try std.fmt.format(writer, "{any}", .{&buffer});
         }
     }
 
