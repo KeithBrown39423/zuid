@@ -7,8 +7,8 @@ test "UUID v1" {
     const uuid = zuid.new.v1();
     const version = uuid.version;
     const variant = uuid.variant;
-    const urn: [36]u8 = undefined;
-    _ = try std.fmt.bufPrint(&urn, "{s}", .{uuid});
+    var urn: [36]u8 = undefined;
+    _ = std.fmt.bufPrint(&urn, "{s}", .{uuid}) catch unreachable;
 
     try expect(urn.len == 36);
     try expect(urn[14] == '1' and version == 1);
@@ -26,8 +26,8 @@ test "UUID v3" {
     const uuid = zuid.new.v3(namespace, url);
     const version = uuid.version;
     const variant = uuid.variant;
-    const urn: [36]u8 = undefined;
-    _ = try std.fmt.bufPrint(&urn, "{s}", .{uuid});
+    var urn: [36]u8 = undefined;
+    _ = std.fmt.bufPrint(&urn, "{s}", .{uuid}) catch unreachable;
 
     try expect(std.mem.eql(u8, str, &urn));
     try expect(urn.len == 36);
@@ -41,8 +41,8 @@ test "UUID v4" {
     const uuid = zuid.new.v4();
     const version = uuid.version;
     const variant = uuid.variant;
-    const urn: [36]u8 = undefined;
-    _ = try std.fmt.bufPrint(&urn, "{s}", .{uuid});
+    var urn: [36]u8 = undefined;
+    _ = std.fmt.bufPrint(&urn, "{s}", .{uuid}) catch unreachable;
 
     try expect(urn.len == 36);
     try expect(urn[14] == '4' and version == 4);
@@ -60,8 +60,8 @@ test "UUID v5" {
     const uuid = zuid.new.v5(namespace, url);
     const version = uuid.version;
     const variant = uuid.variant;
-    const urn: [36]u8 = undefined;
-    _ = try std.fmt.bufPrint(&urn, "{s}", .{uuid});
+    var urn: [36]u8 = undefined;
+    _ = std.fmt.bufPrint(&urn, "{s}", .{uuid}) catch unreachable;
 
     try expect(std.mem.eql(u8, str, &urn));
     try expect(urn.len == 36);
@@ -75,8 +75,8 @@ test "UUID v6" {
     const uuid = zuid.new.v6();
     const version = uuid.version;
     const variant = uuid.variant;
-    const urn: [36]u8 = undefined;
-    _ = try std.fmt.bufPrint(&urn, "{s}", .{uuid});
+    var urn: [36]u8 = undefined;
+    _ = std.fmt.bufPrint(&urn, "{s}", .{uuid}) catch unreachable;
 
     try expect(urn.len == 36);
     try expect(urn[14] == '6' and version == 6);
@@ -89,8 +89,8 @@ test "UUID v7" {
     const uuid = zuid.new.v7();
     const version = uuid.version;
     const variant = uuid.variant;
-    const urn: [36]u8 = undefined;
-    _ = try std.fmt.bufPrint(&urn, "{s}", .{uuid});
+    var urn: [36]u8 = undefined;
+    _ = std.fmt.bufPrint(&urn, "{s}", .{uuid}) catch unreachable;
 
     try expect(urn.len == 36);
     try expect(urn[14] == '7' and version == 7);
@@ -107,8 +107,8 @@ test "UUID v8" {
     const uuid = zuid.new.v8(custom_a, custom_b, custom_c);
     const version = uuid.version;
     const variant = uuid.variant;
-    const urn: [36]u8 = undefined;
-    _ = try std.fmt.bufPrint(&urn, "{s}", .{uuid});
+    var urn: [36]u8 = undefined;
+    _ = std.fmt.bufPrint(&urn, "{s}", .{uuid}) catch unreachable;
 
     try expect(urn.len == 36);
     try expect(urn[14] == '8' and version == 8);
