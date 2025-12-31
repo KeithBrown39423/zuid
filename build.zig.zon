@@ -1,5 +1,7 @@
 .{
-    .name = "zuid",
-    .version = "2.0.0",
+    .name = .zuid,
+    .fingerprint = 0x891c40f0c98fb697,
+    .version = "3.0.0",
     .paths = .{""},
+    .minimum_zig_version = "0.15.1",
 }
