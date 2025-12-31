@@ -10,9 +10,11 @@ pub fn build(b: *std.Build) void {
 
     const test_step = b.step("test", "Run tests for v1, v3, v4, v5, v6, v7, and v8 UUIDs.");
     const tests = b.addTest(.{
-        .root_source_file = b.path("src/testing.zig"),
-        .target = target,
-        .optimize = optimize,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/testing.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
     });
 
     tests.root_module.addImport("zuid", zuid_mod);
