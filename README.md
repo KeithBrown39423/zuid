@@ -49,8 +49,8 @@ Here is a simple example of how to generate a UUID:
 const std = @import("std");
 const zuid = @import("zuid");
 
-pub fn main() !void {
-    const uuid = zuid.new.v4();
+pub fn main(init: std.process.Init) !void {
+    const uuid = zuid.new.v4(init.io);
 
     std.debug.print("UUID: {f}\n", .{ uuid });
 }
@@ -71,8 +71,8 @@ You can also get the UUID as an int through `@bitCast`.
 const std = @import("std");
 const zuid = @import("zuid");
 
-pub fn main() !void {
-    const uuid = zuid.new.v4();
+pub fn main(init: std.process.Init) !void {
+    const uuid = zuid.new.v4(init.io);
 
     std.debug.print("UUID: {f}\n", .{ uuid });
     const uuid_int = @as(u128, @bitCast(uuid));
