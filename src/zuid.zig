@@ -1,8 +1,6 @@
 const std = @import("std");
 
-const rand = std.crypto.random;
-
-/// Pre-defined UUID Namespaces from RFC-4122.
+/// Pre-defined UUID Namespaces from RFC-4122 and RFC-9562.
 pub const UuidNamespace = struct {
     pub const DNS = deserialize("6ba7b810-9dad-11d1-80b4-00c04fd430c8") catch unreachable;
     pub const URL = deserialize("6ba7b811-9dad-11d1-80b4-00c04fd430c8") catch unreachable;
@@ -120,8 +118,9 @@ pub fn fromArray(array: [16]u8) UUID {
 }
 
 /// Get the time since the Gregorian epoch as 100-nanosecond units.
-fn getTime() u60 {
-    const current_time = std.time.nanoTimestamp(); // Gets time relative to UTC epoch
+fn getTime(io: std.Io) u60 {
+    const timestamp = std.Io.Timestamp.now(io, .real);
+    const current_time = std.Io.Timestamp.toNanoseconds(timestamp);
     const gregorian_unix_offset = 122_192_928_000_000_000;
     const intervals_since_gregorian_epoch = @divFloor(current_time, 100) + gregorian_unix_offset;
     const i_60_value = intervals_since_gregorian_epoch & 0x0FFFFFFFFFFFFFFF;
@@ -132,8 +131,11 @@ fn getTime() u60 {
 /// Generate a new UUID
 pub const new = struct {
     /// Generate a Gregorian Time-based UUID
-    pub fn v1() UUID {
-        const timestamp = getTime();
+    pub fn v1(io: std.Io) UUID {
+        const rng_impl: std.Random.IoSource = .{ .io = io };
+        const rand = rng_impl.interface();
+
+        const timestamp = getTime(io);
 
         const time_low = @as(u32, @intCast(timestamp & 0xFFFFFFFF));
         const time_mid = @as(u16, @intCast((timestamp >> 32) & 0xFFFF));
@@ -196,7 +198,10 @@ pub const new = struct {
     }
 
     /// Generate a completely random UUID
-    pub fn v4() UUID {
+    pub fn v4(io: std.Io) UUID {
+        const rng_impl: std.Random.IoSource = .{ .io = io };
+        const rand = rng_impl.interface();
+
         const random_a = rand.int(u48);
         const version = @as(u4, @intCast(4));
         const random_b = rand.int(u12);
@@ -244,8 +249,11 @@ pub const new = struct {
     }
 
     /// Generate a Reordered Gregorian Time-based UUID
-    pub fn v6() UUID {
-        const timestamp = getTime();
+    pub fn v6(io: std.Io) UUID {
+        const rng_impl: std.Random.IoSource = .{ .io = io };
+        const rand = rng_impl.interface();
+
+        const timestamp = getTime(io);
 
         const time_high = @as(u32, @intCast(timestamp & 0xFFFFFFFF));
         const time_mid = @as(u16, @intCast((timestamp >> 32) & 0xFFFF));
@@ -275,8 +283,13 @@ pub const new = struct {
     }
 
     /// Generate a Unix Time-based UUID
-    pub fn v7() UUID {
-        const untx_ts_ms = std.time.milliTimestamp();
+    pub fn v7(io: std.Io) UUID {
+        const rng_impl: std.Random.IoSource = .{ .io = io };
+        const rand = rng_impl.interface();
+
+        const timestamp = std.Io.Timestamp.now(io, .real);
+
+        const untx_ts_ms = std.Io.Timestamp.toMilliseconds(timestamp);
         const version = @as(u4, @intCast(7));
         const variant = @as(u2, @intCast(2));
         const rand_a = rand.int(u12);

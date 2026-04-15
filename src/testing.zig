@@ -2,9 +2,10 @@ const std = @import("std");
 const zuid = @import("zuid");
 
 const expect = std.testing.expect;
+const io = std.testing.io;
 
 test "UUID v1" {
-    const uuid = zuid.new.v1();
+    const uuid = zuid.new.v1(io);
     const version = uuid.version;
     const variant = uuid.variant;
     var urn: [36]u8 = undefined;
@@ -38,7 +39,7 @@ test "UUID v3" {
 }
 
 test "UUID v4" {
-    const uuid = zuid.new.v4();
+    const uuid = zuid.new.v4(io);
     const version = uuid.version;
     const variant = uuid.variant;
     var urn: [36]u8 = undefined;
@@ -72,7 +73,7 @@ test "UUID v5" {
 }
 
 test "UUID v6" {
-    const uuid = zuid.new.v6();
+    const uuid = zuid.new.v6(io);
     const version = uuid.version;
     const variant = uuid.variant;
     var urn: [36]u8 = undefined;
@@ -86,7 +87,7 @@ test "UUID v6" {
 }
 
 test "UUID v7" {
-    const uuid = zuid.new.v7();
+    const uuid = zuid.new.v7(io);
     const version = uuid.version;
     const variant = uuid.variant;
     var urn: [36]u8 = undefined;
@@ -100,9 +101,12 @@ test "UUID v7" {
 }
 
 test "UUID v8" {
-    const custom_a = std.crypto.random.int(u48);
-    const custom_b = std.crypto.random.int(u12);
-    const custom_c = std.crypto.random.int(u62);
+    const rng_impl: std.Random.IoSource = .{ .io = io };
+    const rand = rng_impl.interface();
+
+    const custom_a = rand.int(u48);
+    const custom_b = rand.int(u12);
+    const custom_c = rand.int(u62);
 
     const uuid = zuid.new.v8(custom_a, custom_b, custom_c);
     const version = uuid.version;
