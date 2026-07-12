@@ -88,5 +88,5 @@ pub fn main(init: std.process.Init) !void {
 Contributions are welcome! Please submit a pull request or create an issue to get started.
 
 <p align="right">
-<sub>(<b>ZUID</b> is protected by the <a href="https://github.com/keithbrown39423/zuid/blob/main/LICENSE"><i>MIT licence</i></a>)</sub>
+<sub>(<b>ZUID</b> is protected by the <a href="https://keithbrown.dev/licenses/mit"><i>MIT licence</i></a>)</sub>
 </p>
